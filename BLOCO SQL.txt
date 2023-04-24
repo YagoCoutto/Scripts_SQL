@@ -1,0 +1,190 @@
+select 
+    e420ipo.preuni AS "preço unitario", -- preço unitario
+    e420ipo.codfam AS "cod familia",
+    e420ipo.sitipo AS "tipo situação",
+    e420ipo.vlrliq AS "valor liquido",
+    e420ipo.sitipo AS "situação OC"
+
+
+from
+    E420IPO
+    
+where
+    codemp = 25
+    and codfil = 1
+    and Numocp = 521172
+
+
+
+--------------------------
+select 
+    e420ipo.preuni AS "preço unitario", -- preço unitario
+    e420ipo.codfam AS "cod familia",
+    e420ipo.vlrliq AS "valor liquido",
+    e420ipo.sitipo AS "situação OC",
+    e420ipo.numnfv AS "Nota Fiscal",
+    e420ipo.codpro AS "Codigo produto",
+    e420ipo.usuger AS "usuario gerador",
+    
+    E075PRO.CODEMP AS "cod empresa",
+    E075PRO.CODPRO AS "cod produto",
+    E075PRO.DESPRO AS "descrição",
+    
+    R999USU.CODUSU AS "COD USUARIO"
+
+from
+    E420IPO, E075PRO, R999USU
+    
+where
+     E420IPO.codemp = 25
+    and E420IPO.codfil = 1
+    and E420IPO.Numocp = 521172
+    
+    AND E075PRO.CODEMP = E420IPO.CODEMP
+    AND E075PRO.CODPRO = E420IPO.CODPRO
+    AND R999USU.CODUSU = E420IPO.USUGER
+    
+
+----------------------------- 25/07 -----------------------
+
+select 
+    e420ipo.preuni AS "preço unitario", -- preço unitario
+    e420ipo.codfam AS "cod familia",
+    e420ipo.vlrliq AS "valor liquido",
+    e420ipo.sitipo AS "situação OC",
+    e420ipo.qtdped AS "quantidade",
+    
+    E075PRO.CODEMP AS "cod empresa",
+    E075PRO.CODPRO AS "cod produto",
+    E075PRO.DESPRO AS "descrição",
+    
+    R999USU.CODUSU AS "COD USUARIO",
+    r999usu.nomusu AS "NOME"
+    
+   
+
+from
+    E420IPO, -- ITENS PRODRUTO
+    E075PRO, -- CADASTRO PRODUTO
+    R999USU  -- USUARIO
+
+where
+     E420IPO.codemp = 25
+    and E420IPO.codfil = 1
+    and r999usu.codusu = 838
+    and e075pro.codpro = 03002211
+    and e075pro.despro like upper('mouse%')
+    
+    AND E075PRO.CODEMP = E420IPO.CODEMP
+    AND E075PRO.CODPRO = E420IPO.CODPRO
+    AND R999USU.CODUSU = E420IPO.USUGER
+    
+  
+    
+
+    -----------------------------------------------------------
+
+select
+    E420IPO.CODEMP AS "EMPRESA",
+    E420IPO.CODFIL AS "FILIAL",
+    E420IPO.NUMOCP AS "ORDEMDECOMPRA",
+    E420IPO.SEQIPO AS "SEQITEM",
+    e420ipo.codder AS "DESCRICAO",
+    e420ipo.codpro AS "COD PROD",
+    e420ipo.codder AS "COD DERIVAÇÃO",
+    
+    E410COT.DATCOT AS "DATA",
+    E410COT.NUMCOT AS "COTAÇÃO",
+    
+    E405SOL.SEQSOL
+from
+    E420IPO,
+    E410LCO,
+    E410COT, 
+    E405SOL
+   
+   
+
+where
+    E420IPO.CODEMP = 25
+    AND E420IPO.CODFIL = 1
+    AND E420IPO.NUMOCP = 521172
+    
+    AND E410LCO.CODEMP = E420IPO.CODEMP
+    AND E410LCO.NUMOCP = E420IPO.NUMOCP
+    AND E410COT.CODEMP = E420IPO.CODEMP
+    
+    AND E405SOL.SEQSOL = E420IPO.SEQIPO
+    
+
+    
+
+----------------------------- CONCLUIDO - ENTENDIMENTO CONCLUIDO-------------------
+
+select 
+    e420ipo.codemp,
+    e420ipo.codfil,
+    e420ipo.seqipo,
+    e420ipo.numocp,
+    e420ipo.codpro,
+    e420ipo.codder,
+    
+    e075pro.temicm
+
+from 
+    e420ipo, 
+    e075pro
+ 
+where 
+    e420ipo.codemp = 25
+    and e420ipo.codfil = 1
+    and e420ipo.numocp = 521178
+    
+   and e075pro.codpro = e420ipo.codpro -- AQUI TA CONFIRMANDO SE TEM O MESMO NUMERO DE PRODUTO
+   and e075pro.codemp = e420ipo.codemp -- AQUI TA CONFIRMANDO SE TA NA MESMA EMPRESA
+    
+---------->> O relacionamento deve ser sempre entre as chaves primarias <<<<---------------
+
+//DESCRIÇÃO DO PAGAMENTO
+select e420ipo.codemp AS "EMPRESA",
+       e420ipo.codfil AS "FILIAL",
+       e420ipo.numocp AS "OCP",
+       e420ipo.codpro AS "PRODUTO",
+       e420ipo.cplipo AS "DESCRIÇÃO",
+       
+       e420ocp.codcpg AS "COD PAG",
+       e028cpg.descpg AS "DESCRIÇÃO PAG",
+       
+       e066fpg.desfpg AS "FORMA DE PAG",
+       
+      -- e420ipo.tnspro,
+      -- e001tns.codtns,
+      -- e001tns.venmoe,
+       e031moe.codmoe AS "MOEDA"
+
+  from 
+    e420ipo, 
+    e420ocp
+    left join e031moe on e420ocp.codmoe = e031moe.codmoe,
+    e028cpg,
+    e066fpg,
+    e001tns
+
+ where e420ipo.codemp = 25
+   and e420ipo.codfil = 1
+   and e420ipo.numocp = 23
+   and e420ipo.codpro = 95002039
+      
+   and e420ipo.codemp = e420ocp.codemp
+   and e420ipo.codfil = e420ocp.codfil
+   and e420ipo.numocp = e420ocp.numocp
+      
+   and e420ocp.codemp = e028cpg.codemp
+   and e420ocp.codcpg = e028cpg.codcpg
+      
+   and e420ipo.codemp = e066fpg.codemp
+   and e028cpg.codcpg = e066fpg.codfpg
+      
+   and e420ocp.codmoe = e031moe.codmoe
+   and e420ocp.codemp = e001tns.codemp
+   and e420ocp.tnspro = e001tns.codtns
